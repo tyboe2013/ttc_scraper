@@ -1,0 +1,84 @@
+from pydoc import pager
+import urllib3
+import requests
+from bs4 import BeautifulSoup
+from lxml import html
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+
+driver = webdriver.Chrome(executable_path='C:\\Users\\tyboe\\OneDrive\\Desktop\\Projects\\Python\\rss\\webdriver\\chromedriver_win32\\chromedriver.exe')
+driver.get("https://us.tamrieltradecentre.com/pc/Trade/SearchResult?ItemID=211&SortBy=Price&Order=asc")
+#url = ("https://us.tamrieltradecentre.com/pc/Trade/SearchResult?ItemID=211&SortBy=LastSeen&Order=desc&page=1")
+results = []
+content = driver.page_source
+soup = BeautifulSoup(content, 'html.parser')
+allinfo = []
+
+WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, "//*[@id='search-result-view']/div[1]/div/table/tbody/tr[1]/td[4]")))
+#listElements = driver.find_element(By.XPATH("/html/body/div[2]/table/tbody/tr[2]/td[2]/section/div/div[2]/div[1]/div/table/tbody/tr[3]/td[3]/div[1]"))
+
+#listName = []
+
+#for x in listElements:
+    #listName.append(x.text)
+    #print(listName)
+#for el in listElements:
+    #listName.append((el["data-bind=text: StringResource['TraderLocation' + DBData.GuildKioskLocation[GuildKioskLocationID]]"]))
+    #print (listName)
+
+
+recent = soup.select("table tbody tr td.hidden-xs")
+
+name = soup.find("div", {'class': "item-quality-legendary"})
+
+amount = soup.select("table tbody tr td.gold-amount span")
+
+guild = soup.select("table tbody tr.cursor-pointer")
+limit = guild[:10]
+
+guildn = []
+
+first30 = amount[:10]
+
+text = soup.find_all(text=True)
+
+output = ''
+blacklist = [
+    '[document]',
+    'noscript',
+    'header',
+    'nav',
+    'html',
+    'meta',
+    'head', 
+    'input',
+    'footer',
+    'ins',
+    'iframe',
+    'form',
+    # there may be more elements you don't want, such as "style", etc.
+]
+
+for t in text:
+    if t.parent.name not in blacklist:
+        
+        output += '{} '.format(t)
+
+#print(output)
+
+#for p in limit:
+    #guildn.append(p.text)
+    #print(guildn)
+
+time = []
+#for i in recent:
+    #time.append(i.text)
+    #if 'Now' in time:
+        #print(final)
+
+    #else:
+        #print ("Nothing Found")
